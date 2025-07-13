@@ -19,5 +19,5 @@ jobs:
         run: |
           git fetch origin
           git checkout staging
-          git merge --no-ff dev -m "Auto-merge dev → staging [skip ci]"
+          git merge dev --allow-unrelated-histories -m "Auto-merge dev → staging [skip ci]"
           git push origin staging
