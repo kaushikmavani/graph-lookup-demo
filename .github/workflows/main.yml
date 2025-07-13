@@ -3,6 +3,7 @@ name: Deploy to Main
 on:
   push:
     branches: ["dev"]
+  workflow_dispatch:
 
 jobs:
   promote-to-staging:
