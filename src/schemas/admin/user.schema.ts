@@ -1,7 +1,6 @@
 import z from "zod/v4"
 import config from "../../config/app.config"
 import mongoose from "mongoose"
-import { issue } from "zod/v4/core/util"
 
 export const getAllUsersSchema = z.object({
   query: z.object({
