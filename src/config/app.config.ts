@@ -1,5 +1,6 @@
 import "dotenv/config"
 import messages from "./messages"
+import constants from "./constants"
 
 const config = {
   app: {
@@ -11,9 +12,9 @@ const config = {
     mongoURI: process.env.MONGO_URI,
     seed: {
       admin: {
-        name: process.env.ADMIN_NAME,
-        email: process.env.ADMIN_EMAIL,
-        password: process.env.ADMIN_PASSWORD,
+        name: process.env.ADMIN_NAME as string,
+        email: process.env.ADMIN_EMAIL as string,
+        password: process.env.ADMIN_PASSWORD as string,
       },
     },
   },
@@ -22,6 +23,7 @@ const config = {
     jwtExpiresIn: process.env.JWT_EXPIRY_TIME as `${number}d`,
     bcryptSaltLength: 10,
   },
+  constants,
   messages,
 }
 

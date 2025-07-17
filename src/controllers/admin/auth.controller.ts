@@ -22,7 +22,12 @@ export const login = async (
       return await errorResponse(res, 400, 0, config.messages.invalidPassword)
     }
 
-    const token = generateToken({ name: admin.name, email: admin.email })
+    const token = generateToken({
+      _id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      role: config.constants.auth.guard.admin,
+    })
 
     const data = {
       token,

@@ -3,7 +3,7 @@ import { errorResponse } from "../utils/responseHandler"
 import { ZodError, ZodObject } from "zod/v4"
 
 export default (schema: ZodObject): ((req: Request, res: Response, next: NextFunction) => Promise<any>) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
       await schema.parseAsync({
         body: req?.body ?? {},

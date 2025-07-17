@@ -6,6 +6,9 @@ const messages = {
   unexpectedError: "An unexpected network error occurred, please try again later.",
   invalidEndpointOrMethod: "Please enter valid endpoint and method.",
 
+  // Middlewares
+  invalidToken: "You are not authorized to access associated web-services, Please enter valid token.",
+
   // Auth
   emailNotRegistered: "This email is not registered with us. Please use correct email address.",
   emailAlreadyRegistered: "This email is already registered with us. Please try another email.",
@@ -17,6 +20,9 @@ const messages = {
   getAllUsersSuccessful: "Get all users successfully.",
   getUserSuccessful: "Get user successfully.",
   invalidUserId: "Please enter valid user ID.",
+  invalidParentUserId: "Please enter valid parent user id",
+  parentUserIsNotSameUser: "You cannot pass same user id as a parent user id",
+  notDeletableDueParentUser: "You cannot delete user because it's already other user's parent",
   userCreatedSuccessful: "User created successfully.",
   userUpdatedSuccessful: "User udpated successfully.",
   userDeletedSuccessful: "User deleted successfully.",

@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { errorResponse, SendableResponse, successResponse } from "../../utils/responseHandler"
-import User from "../../models/user.model"
+import User, { UserInput } from "../../models/user.model"
 import config from "../../config/app.config"
 import {
   CreateUserSchemaType,
@@ -65,7 +65,7 @@ export const createUser = async (
   session.startTransaction()
 
   try {
-    const { name, email, password } = req.body
+    const { name, email, password, parentUserId } = req.body
 
     const user = await User.findOne({ email })
     if (user) {
@@ -74,14 +74,21 @@ export const createUser = async (
 
     const hashedPassword = hashPassword(password)
 
-    const createdUser = await User.create(
-      {
-        name,
-        email,
-        password: hashedPassword,
-      },
-      { session }
-    )
+    const data: UserInput = {
+      name,
+      email,
+      password: hashedPassword,
+    }
+
+    if (parentUserId) {
+      const parentUser = await User.findOne({ _id: parentUserId })
+      if (!parentUser) {
+        return await errorResponse(res, 400, 0, config.messages.invalidParentUserId)
+      }
+      data.parentUser = parentUser._id as mongoose.Types.ObjectId
+    }
+
+    const createdUser = await User.create([data], { session })
 
     await session.commitTransaction()
 
@@ -103,7 +110,7 @@ export const updateUser = async (
 
   try {
     const { id } = req.params
-    const { name, email } = req.body
+    const { name, email, parentUserId } = req.body
 
     const user = await User.findOne({ _id: id })
     if (!user) {
@@ -117,7 +124,24 @@ export const updateUser = async (
       }
     }
 
-    const updatedUser = await User.findOneAndUpdate({ _id: user._id }, { name, email }, { new: true, session })
+    if (parentUserId == user._id) {
+      return await errorResponse(res, 400, 0, config.messages.parentUserIsNotSameUser)
+    }
+
+    const data: Omit<UserInput, "password"> = {
+      name,
+      email,
+    }
+
+    if (parentUserId) {
+      const parentUser = await User.findOne({ _id: parentUserId })
+      if (!parentUser) {
+        return await errorResponse(res, 400, 0, config.messages.invalidParentUserId)
+      }
+      data.parentUser = parentUser._id as mongoose.Types.ObjectId
+    }
+
+    const updatedUser = await User.findOneAndUpdate({ _id: user._id }, data, { new: true, session }).select("-password")
 
     await session.commitTransaction()
 
@@ -143,6 +167,11 @@ export const deleteUser = async (
     const user = await User.findOne({ _id: id })
     if (!user) {
       return await errorResponse(res, 400, 0, config.messages.invalidId)
+    }
+
+    const parentUser = await User.findOne({ parentUser: user._id })
+    if (parentUser) {
+      return await errorResponse(res, 400, 0, config.messages.notDeletableDueParentUser)
     }
 
     await User.deleteOne({ _id: user._id }, { session })

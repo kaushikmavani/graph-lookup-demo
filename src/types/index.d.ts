@@ -1,8 +1,9 @@
 declare global {
   namespace Express {
     interface Request {
-      // user?: User;
-      // token?: string      
+      admin?: Record<string, any>
+      user?: Record<string, any>
+      token?: string
     }
   }
 }

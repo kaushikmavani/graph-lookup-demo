@@ -10,6 +10,7 @@ import {
   updateUserSchema,
 } from "../schemas/admin/user.schema"
 import { createUser, deleteUser, getAllUsers, getUser, updateUser } from "../controllers/admin/user.controller"
+import verifyToken from "../middlewares/verifyToken"
 
 const router = express.Router()
 
@@ -17,10 +18,10 @@ const router = express.Router()
 router.post("/auth/login", validationResource(loginSchema), login)
 
 // User
-router.get("/users", validationResource(getAllUsersSchema), getAllUsers)
-router.get("/users/:id", validationResource(getUserSchema), getUser)
-router.post("/users/create", validationResource(createUserSchema), createUser)
-router.put("/users/update/:id", validationResource(updateUserSchema), updateUser)
-router.delete("/users/delete/:id", validationResource(deleteUserSchema), deleteUser)
+router.get("/users", verifyToken, validationResource(getAllUsersSchema), getAllUsers)
+router.get("/users/:id", verifyToken, validationResource(getUserSchema), getUser)
+router.post("/users/create", verifyToken, validationResource(createUserSchema), createUser)
+router.put("/users/update/:id", verifyToken, validationResource(updateUserSchema), updateUser)
+router.delete("/users/delete/:id", verifyToken, validationResource(deleteUserSchema), deleteUser)
 
 export default router

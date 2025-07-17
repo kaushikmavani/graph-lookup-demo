@@ -1,6 +1,6 @@
 import mongoose, { Document, Model, Schema, Types } from "mongoose"
 
-interface UserInput {
+export interface UserInput {
   name: string
   email: string
   password: string

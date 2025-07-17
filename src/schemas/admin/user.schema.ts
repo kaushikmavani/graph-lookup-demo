@@ -34,6 +34,16 @@ export const createUserSchema = z.object({
         error: (issue) => (issue.input === undefined ? config.messages.passwordRequired : issue.message),
       })
       .min(6, { error: config.messages.passwordMinSix }),
+    parentUserId: z
+      .string({ error: (issue) => (issue.input === undefined ? "" : config.messages.invalidParentUserId) })
+      .refine(
+        (val) => {
+          if (!val) return true
+          return mongoose.Types.ObjectId.isValid(val)
+        },
+        { error: config.messages.invalidParentUserId }
+      )
+      .optional(),
   }),
 })
 
@@ -50,6 +60,16 @@ export const updateUserSchema = z.object({
     email: z.email({
       error: (issue) => (issue.input === undefined ? config.messages.emailRequired : config.messages.invalidEmail),
     }),
+    parentUserId: z
+      .string({ error: (issue) => (issue.input === undefined ? "" : config.messages.invalidParentUserId) })
+      .refine(
+        (val) => {
+          if (!val) return true
+          return mongoose.Types.ObjectId.isValid(val)
+        },
+        { error: config.messages.invalidParentUserId }
+      )
+      .optional(),
   }),
 })
 
